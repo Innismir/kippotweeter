@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-# submit_sample.py - Script that sends a file of suspected malware for 
-# analysis to Symantec. Requires a Business Critical Support ID Number.
+# kippotweeter.py - Script that monitors a Kippo log file and sends 
+# alerts to Twitter
 #
 # USAGE: nohup ./kippotweeter.py &
 #
