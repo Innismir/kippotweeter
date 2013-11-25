@@ -36,6 +36,7 @@
 import time, os, re, syslog, string, sqlite3
 from twitter import *
 from ConfigParser import SafeConfigParser
+from time import gmtime, strftime
 
 #Read the configuration file
 config = SafeConfigParser()
@@ -97,11 +98,11 @@ while 1:
             (success,fail) = probecursor.fetchone()
  
             if result.group(4) == "succeeded":
-                message = config.get('kippotweeter', 'node_name') + " auth success (" + result.group(2) + "/" + result.group(3) + ") from " + result.group(1)
+                message = strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " " + config.get('kippotweeter', 'node_name') + " auth success (" + result.group(2) + "/" + result.group(3) + ") from " + result.group(1)
                 probecursor.execute("UPDATE probes SET times_fail=times_fail+1, last_seen=?, last_success=? WHERE ipaddress=?", (time.time(), time.time(), result.group(1)))
 
             elif (result.group(4) == "failed"):
-                message = config.get('kippotweeter', 'node_name') + " auth fail (" + result.group(2) + "/" + result.group(3) + ") from " + result.group(1) 
+                message = strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " " + config.get('kippotweeter', 'node_name') + " auth fail (" + result.group(2) + "/" + result.group(3) + ") from " + result.group(1) 
                 probecursor.execute("UPDATE probes SET times_success=times_success+1, last_seen=?, last_fail=? WHERE ipaddress=?", (time.time(), time.time(), result.group(1)))
  
             message = message + " [S:" + str(success) + "/F:" + str(fail) + "] #TwittIR"
@@ -114,7 +115,7 @@ while 1:
         result = lost_connection.search(line)
 
         if drive_by_tracker != 0:
-            message = config.get('kippotweeter', 'node_name') + " empty SSH connection from " + drive_by_tracker + " #TwittIR"
+            message = strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " " + config.get('kippotweeter', 'node_name') + " empty SSH connection from " + drive_by_tracker + " #TwittIR"
             drive_by_tracker = 0
 
         if message is not None:
